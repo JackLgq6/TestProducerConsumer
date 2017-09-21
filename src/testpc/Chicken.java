@@ -36,16 +36,17 @@ public class Chicken extends Animal {
 				synchronized (mObj) {
 					if (mCurrentMonth == 2) {
 						try {
-							mObj.notify();
+							mObj.notify();							
+							eggs += mCurrentAnimalNum * 20;
+//							System.out.println("二月初的蛋的数量是："+eggs);
 							if (mCurrentYear > 1) {
 								mCurrentAnimalNum += mBabyNum;
 							}
-							eggs += mCurrentAnimalNum * 20;
 							mBabyNum = (int)(eggs * 0.2);							
-							System.out.println("第" + mCurrentYear + "年 " + mCurrentMonth + "月,生育小鸡" + mBabyNum + "只，现在农场一共有"
-									+ mCurrentAnimalNum + "只下蛋母鸡");
+//							System.out.println("第" + mCurrentYear + "年 " + mCurrentMonth + "月,生育小鸡" + mBabyNum + "只，现在农场一共有"
+//									+ mCurrentAnimalNum + "只下蛋母鸡");
 							eggs = 0;
-							System.out.println("第" + mCurrentYear + "年 " + mCurrentMonth+"月，蛋的数量是："+eggs);
+//							System.out.println("第" + mCurrentYear + "年 " + mCurrentMonth+"月，蛋的数量是："+eggs);
 							mObj.wait();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
@@ -53,8 +54,8 @@ public class Chicken extends Animal {
 					}else {
 						eggs += mCurrentAnimalNum * 20;	
 
-						System.out.println("第" + mCurrentYear + "年 " + mCurrentMonth+"月，蛋的数量是："+eggs+"现在农场一共有"
-								+ mCurrentAnimalNum + "只下蛋母鸡");
+//						System.out.println("第" + mCurrentYear + "年 " + mCurrentMonth+"月，蛋的数量是："+eggs+"现在农场一共有"
+//								+ mCurrentAnimalNum + "只下蛋母鸡");
 					}					
 					mCurrentMonth++;
 					if (mCurrentMonth >= 13) {
@@ -63,7 +64,8 @@ public class Chicken extends Animal {
 				}
 
 			}
-			
+			System.out.println("历时" + mCurrentYear + "年 " + "小鸡有"+mBabyNum+"只，下蛋母鸡有"+mCurrentAnimalNum+"只，"
+					+"农场一共有"+(mCurrentAnimalNum+mBabyNum)+"只鸡，蛋一共有"+eggs+"个");
 			mCurrentYear++;
 			
 		}
@@ -79,7 +81,6 @@ public class Chicken extends Animal {
 					try {
 						mObj.wait();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}else {
@@ -87,9 +88,9 @@ public class Chicken extends Animal {
 				int mSkillorSell = (int)(mCurrentAnimalNum * 0.2);
 				mCurrentAnimalNum = mCurrentAnimalNum-mSkillorSell;
 				try {
-					System.out.println(
-						"第" + mCurrentYear + "年 " + mCurrentMonth + "月,出售宰杀" + mSkillorSell
-						+ "只下蛋母鸡，现在农场一共有" + mCurrentAnimalNum + "只下蛋母鸡");
+//					System.out.println(
+//						"第" + mCurrentYear + "年 " + mCurrentMonth + "月,出售宰杀" + mSkillorSell
+//						+ "只下蛋母鸡，现在农场一共有" + mCurrentAnimalNum + "只下蛋母鸡");
 					mObj.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();

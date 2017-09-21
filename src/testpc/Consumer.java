@@ -13,7 +13,7 @@ public class Consumer implements Runnable{
 		
 		while (true)
 		{
-			if(mAnimal.getmCurrentYear() < mAnimal.getmInitYear()) {
+			if(mAnimal.getmCurrentYear() <= mAnimal.getmInitYear()) {
 				mAnimal.consume();
 			}else {
 				break;
