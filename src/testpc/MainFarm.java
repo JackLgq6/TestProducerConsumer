@@ -21,13 +21,15 @@ public class MainFarm {
 		Sheep mSheep = new Sheep(mInitRawNum,mInitEweNum,mInitYear,mInitMonth);
 		new Thread(new Producer(mSheep)).start();
 		new Thread(new Consumer(mSheep)).start();
+			*/	
 		
 		//牛的生产/消费
 		int mInitBullNum = 1;
 		int mInitBossyNum = 1;
 		Cattle mCattle = new Cattle(mInitBullNum,mInitBossyNum,mInitYear,mInitMonth);
 		new Thread(new Producer(mCattle)).start();
-		new Thread(new Consumer(mCattle)).start();	*/	
+//		mCattle.produce();
+//		new Thread(new Consumer(mCattle)).start();
 		
 	}
 

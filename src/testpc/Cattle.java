@@ -1,5 +1,8 @@
 package testpc;
 
+import java.util.Iterator;
+import java.util.Random;
+
 public class Cattle extends Animal{
 
 	private int mCurrentAnimalNum; //当前总的牛数
@@ -10,7 +13,7 @@ public class Cattle extends Animal{
 	private int mInitYear;
 	private int mCurrentYear;
 	private int mCurrentMonth;
-	private int mBadyNum;
+	private int mBadyNum = 0; //小母牛数量
 	
 	private Object mObj = new Object();
 	
@@ -22,26 +25,61 @@ public class Cattle extends Animal{
 		mInitYear = mInityear;
 		mCurrentMonth = mInitmonth;
 	}
-	
+	/*
+	 *  公牛和母牛各1头，每2年生产1只小牛。小牛2年会后开始生产，小牛的性别随机。
+	 */
 	@Override
 	public void produce() {
 		//实现生产方法
+		//母牛每两年生产一头小牛
+		for (int i = 2; i <= mInitYear; i += 2) {
+			
+			//计算母牛数量
+			mCurrentBossyNum += mBadyNum;
+//			System.out.println("第"+i+"年生产了"+mCurrentBossyNum+"头小牛");
+			//每隔两年清空小牛数量
+			mBadyNum = 0;
+			//根据随机数确定每头小牛的性别
+			for (int j = 1; j <= mCurrentBossyNum; j++) {
+				Random random = new Random();
+				//随机数gender表示小牛性别 0:公  1:母
+				int gender = random.nextInt(2);
+				//如果是公牛，直接将小牛加入mCurrentBullNum
+				if (0 == gender) {
+//					System.out.println("第"+i+"年生育的小牛的性别是：公");
+					mCurrentBullNum ++;
+				} else {
+//					System.out.println("第"+i+"年生育的小牛的性别是：母");
+					//如果是母牛，将小母牛数量加1
+					mBadyNum ++;
+				}
+				
+			}
+			System.out.println("第"+i+"年生育的小牛数量是："+mCurrentBossyNum);
+//			System.out.println("第"+i+"年生产了"+mBadyNum+"头小母牛");
+			//当年牛的总数：公牛+母牛+小母牛
+			mCurrentAnimalNum = mCurrentBossyNum + mCurrentBullNum+mBadyNum;
+			System.out.println("第"+i+"年一共有"+mCurrentAnimalNum+"头牛");
+			mCurrentYear += 2;
+		}
+		
+		/*
 		synchronized (mObj)
 		{
 			System.out.println("第"+mCurrentYear+"年 "+mCurrentMonth+"月,生育小牛"
 					+mBadyNum+"只，现在农场一共有"+mCurrentAnimalNum+"只牛");
-		}	
+		}	*/
 		
 	}
 
 	@Override
 	public void consume() {
 		//实现消费方法
-		synchronized (mObj)
+		/*synchronized (mObj)
 		{
 			System.out.println("第"+mCurrentYear+"年 "+mCurrentMonth+"月,出售"
 					+0+"只，现在农场一共有"+mCurrentAnimalNum+"只牛");
-		}	
+		}	*/
 		
 	}
 
