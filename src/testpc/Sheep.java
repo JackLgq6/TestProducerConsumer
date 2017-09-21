@@ -29,7 +29,7 @@ public class Sheep extends Animal {
 		mCurrentSheepNum = mInitRawNum + mInitEweNum;
 		mCurrentRawNum = mInitRawNum;
 		mCurrentEweNum = mInitEweNum;
-		mCurrentYear = mInityear;
+		mCurrentYear = 1;
 		mInitYear = mInityear;
 		mCurrentMonth = mInitmonth;
 	}
@@ -43,18 +43,20 @@ public class Sheep extends Animal {
 		// 实现生产方法
 		
 		for (int i = 1; i <= mInitYear; i++) {
+//			System.out.println(mCurrentYear+"-------"+mCurrentMonth);
 			for (int j = 1; j <= 12; j++) {
 				synchronized (mObj) {
 //				lock.lock();
 					int pro_small_ram_count = 0;
-					if (mCurrentEweNum == 10) {
+					if (mCurrentMonth == 10) {
+						mObj.notify();
 						if (mCurrentYear % 2 != 0 && mCurrentYear != 1) {
 							mCurrentEweNum += mSmallEweCount;
 							mSmallEweCount = 0;
 						}
 						if (mCurrentYear % 2 == 0 && mCurrentYear != 2) {
-							System.out.println(mCurrentEweNum);
-							System.out.println(pro_small_ewe_count);
+//							System.out.println(mCurrentEweNum);
+//							System.out.println(pro_small_ewe_count);
 							mCurrentEweNum += pro_small_ewe_count;
 							pro_small_ewe_count = 0;
 						}
@@ -75,36 +77,46 @@ public class Sheep extends Animal {
 							}
 						}
 						if (mCurrentYear % 2 != 0) {
-							System.out.print("第"+ mCurrentYear + "年：" + "生了" + mSmallEweCount  + "只" + "小母羊， 生了" + pro_small_ram_count+ "只小公羊， ");
+							System.out.print("第"+ mCurrentYear + "年 " + "生了" + mSmallEweCount  + "只" + "小母羊， 生了" + pro_small_ram_count+ "只小公羊， ");
 							
 						} else {
-							System.out.print("第"+ mCurrentYear + "年：" + "生了" + pro_small_ewe_count  + "只" + "小母羊， 生了" + pro_small_ram_count+ "只小公羊， ");
+							System.out.print("第"+ mCurrentYear + "年 " + "生了" + pro_small_ewe_count  + "只" + "小母羊， 生了" + pro_small_ram_count+ "只小公羊， ");
 //							System.out.println();
 //							System.out.println(mEweCount);
 //							System.out.println(mRamCount);
 //							System.out.println(pro_small_ewe_count);
 						}
 						mCurrentSheepNum += mCurrentEweNum * 5;
-						System.out.print("总的羊的数量：" + mCurrentSheepNum + ", ");
-					} else {
-						/*try {
+						System.out.println("总的羊的数量：" + mCurrentSheepNum);
+						mCurrentMonth++;
+						if (mCurrentMonth >= 13) {
+							mCurrentMonth -= 12;
+						}
+						try {
 							mObj.wait();
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}*/
-					    
+						}
+					} else {
+						mObj.notify();
+						mCurrentMonth++;
+						if (mCurrentMonth >= 13) {
+							mCurrentMonth -= 12;
+						}
+						try {
+							mObj.wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 //					mObj.notify();
 				}
 //					lock.unlock();
-				mCurrentMonth++;
-				if (mCurrentMonth >= 13) {
-					mCurrentMonth -= 12;
-				}
+				
 			}
 			mCurrentYear++;
-			
 		}
 //		condition.signal();
 //		lock.unlock();
@@ -116,6 +128,7 @@ public class Sheep extends Animal {
 //		lock.lock();
 		synchronized (mObj) {
 			if (mCurrentMonth == 2) {
+				mObj.notify();
 				int sellCount = (int) (mCurrentSheepNum * 0.2);// 卖掉的羊的总数
 				int sell_ewe_count = 0;
 				int sell_ram_count = 0;
@@ -143,13 +156,26 @@ public class Sheep extends Animal {
 				}
 				mCurrentSheepNum = mCurrentRawNum + mCurrentEweNum
 						+ mSmallEweCount + pro_small_ewe_count;
-				System.out.print("， 卖掉" + sell_ewe_count + "只母羊" + ", " + "卖掉"
+				System.out.print("第" + mCurrentYear +"年 卖掉" + sell_ewe_count + "只母羊" + ", " + "卖掉"
 						+ sell_ram_count + "只公羊， ");
 				System.out.println("第" + mCurrentYear + "年" + "公羊的数量："
 						+ mCurrentRawNum + ", 母羊的数量：" + mCurrentEweNum
 						+ ",小母羊的数量：" + (mSmallEweCount + pro_small_ewe_count)
 						+ ",羊的总数：" + mCurrentSheepNum);
+				try {
+					mObj.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
+				mObj.notify();
+				try {
+					mObj.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				/*try {
 					mObj.wait();

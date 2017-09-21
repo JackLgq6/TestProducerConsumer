@@ -9,28 +9,28 @@ public class MainFarm {
 		//起始月份
 		int mInitMonth = 9;
 		
-		//鸡的生产/消费
+	/*	//鸡的生产/消费
 		int mInitChickenNum = 40;
 		Chicken mChicken = new Chicken(mInitChickenNum,mInitYear,mInitMonth);
 		new Thread(new Producer(mChicken)).start();
-		new Thread(new Consumer(mChicken)).start();
+		new Thread(new Consumer(mChicken)).start();*/
 		
-		/*//羊的生产/消费
+		//羊的生产/消费
 		int mInitRawNum = 8;
 		int mInitEweNum = 2;
 		Sheep mSheep = new Sheep(mInitRawNum,mInitEweNum,mInitYear,mInitMonth);
 		new Thread(new Producer(mSheep)).start();
 		new Thread(new Consumer(mSheep)).start();
-			*/	
+				
 		
-		//牛的生产/消费
+	/*	//牛的生产/消费
 		int mInitBullNum = 1;
 		int mInitBossyNum = 1;
 		Cattle mCattle = new Cattle(mInitBullNum,mInitBossyNum,mInitYear,mInitMonth);
 		new Thread(new Producer(mCattle)).start();
 //		mCattle.produce();
 //		new Thread(new Consumer(mCattle)).start();
-		
+*/		
 	}
 
 }
