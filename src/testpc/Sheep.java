@@ -1,27 +1,22 @@
 package testpc;
 
 import java.util.Random;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Sheep extends Animal {
 
 	private int mCurrentSheepNum; // 当前总的羊数
 	private int mCurrentRawNum; // 当前公羊数
 	private int mCurrentEweNum; // 当前母羊数
-	private int mSmallEweCount = 0;// 小母羊的数量
-	private int mSmallRamCount = 0;// 小公羊
-	private int pro_small_ewe_count = 0;
-//	private Lock lock = new ReentrantLock();
-//	private final Condition condition = lock.newCondition(); 
+	private int mSmallEweCount = 0;// 第1,3,5等年小母羊的数量
+	private int mSmallRamCount = 0;// 小公羊数量
+	private int pro_small_ewe_count = 0; //第2,4,6等年生的小羊数量
 	
 	private int mHeadNum;
 	private int mLegNum;
 	private int mInitYear;
 	private int mCurrentYear;
 	private int mCurrentMonth;
-	private int mBadyNum;
+	private boolean mSheepFlag;
 
 	private Object mObj = new Object();
 
@@ -34,19 +29,11 @@ public class Sheep extends Animal {
 		mCurrentMonth = mInitmonth;
 	}
 
-	/*
-	 * 羊群里面有8只母羊，2只公羊。每只母羊每年10月生产5只小羊，性别随机。
-	 * 每年2月农夫出售20%羊，公羊母羊各一半（若为20%的羊数为奇数，多的那一头羊为公羊）。 小羊2年后开始生产，性别随机。
-	 */
 	@Override
 	public void produce() {
-		// 实现生产方法
-		
 		for (int i = 1; i <= mInitYear; i++) {
-//			System.out.println(mCurrentYear+"-------"+mCurrentMonth);
 			for (int j = 1; j <= 12; j++) {
 				synchronized (mObj) {
-//				lock.lock();
 					int pro_small_ram_count = 0;
 					if (mCurrentMonth == 10) {
 						mObj.notify();
@@ -55,8 +42,6 @@ public class Sheep extends Animal {
 							mSmallEweCount = 0;
 						}
 						if (mCurrentYear % 2 == 0 && mCurrentYear != 2) {
-//							System.out.println(mCurrentEweNum);
-//							System.out.println(pro_small_ewe_count);
 							mCurrentEweNum += pro_small_ewe_count;
 							pro_small_ewe_count = 0;
 						}
@@ -81,13 +66,9 @@ public class Sheep extends Animal {
 							
 						} else {
 							System.out.print("第"+ mCurrentYear + "年 " + "生了" + pro_small_ewe_count  + "只" + "小母羊， 生了" + pro_small_ram_count+ "只小公羊， ");
-//							System.out.println();
-//							System.out.println(mEweCount);
-//							System.out.println(mRamCount);
-//							System.out.println(pro_small_ewe_count);
 						}
 						mCurrentSheepNum += mCurrentEweNum * 5;
-						System.out.println("总的羊的数量：" + mCurrentSheepNum);
+						System.out.print("总的羊的数量：" + mCurrentSheepNum + ", ");
 						mCurrentMonth++;
 						if (mCurrentMonth >= 13) {
 							mCurrentMonth -= 12;
@@ -95,7 +76,6 @@ public class Sheep extends Animal {
 						try {
 							mObj.wait();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					} else {
@@ -107,25 +87,21 @@ public class Sheep extends Animal {
 						try {
 							mObj.wait();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
-//					mObj.notify();
 				}
-//					lock.unlock();
-				
+			}
+			if(mCurrentYear==mInitYear){
+				mSheepFlag = true;
 			}
 			mCurrentYear++;
 		}
-//		condition.signal();
-//		lock.unlock();
 	}
 
 	@Override
 	public void consume() {
 		// 实现消费方法
-//		lock.lock();
 		synchronized (mObj) {
 			if (mCurrentMonth == 2) {
 				mObj.notify();
@@ -156,16 +132,14 @@ public class Sheep extends Animal {
 				}
 				mCurrentSheepNum = mCurrentRawNum + mCurrentEweNum
 						+ mSmallEweCount + pro_small_ewe_count;
-				System.out.print("第" + mCurrentYear +"年 卖掉" + sell_ewe_count + "只母羊" + ", " + "卖掉"
-						+ sell_ram_count + "只公羊， ");
-				System.out.println("第" + mCurrentYear + "年" + "公羊的数量："
+				System.out.println("第" + mCurrentYear +"年 卖掉" + sell_ewe_count + "只母羊" + ", " + "卖掉"
+						+ sell_ram_count + "只公羊， " + "第" + mCurrentYear + "年" + "公羊的数量："
 						+ mCurrentRawNum + ", 母羊的数量：" + mCurrentEweNum
 						+ ",小母羊的数量：" + (mSmallEweCount + pro_small_ewe_count)
 						+ ",羊的总数：" + mCurrentSheepNum);
 				try {
 					mObj.wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
@@ -173,21 +147,9 @@ public class Sheep extends Animal {
 				try {
 					mObj.wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				/*try {
-					mObj.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-				
 			}
-//			condition.signal();
-//			lock.unlock();
-//			mObj.notify();
 		}
 	}
 
@@ -256,5 +218,14 @@ public class Sheep extends Animal {
 	public void setmCurrentMonth(int mCurrentMonth) {
 		this.mCurrentMonth = mCurrentMonth;
 	}
+
+	public boolean ismSheepFlag() {
+		return mSheepFlag;
+	}
+
+	public void setmSheepFlag(boolean mSheepFlag) {
+		this.mSheepFlag = mSheepFlag;
+	}
+	
 
 }
